@@ -15,7 +15,7 @@
     "graphql-request": "^6.1.0",
     "jsonwebtoken": "^9.0.2",
     "next": "14.0.0",
-    "next-auth": "^4.24.3",
+    "next-auth": "^5.0.0-beta.3",
     "react": "^18",
     "react-dom": "^18"
   },
