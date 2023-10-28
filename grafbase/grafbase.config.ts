@@ -1,27 +1,40 @@
-import { g, auth, config } from "@grafbase/sdk";
+import { GrafbaseSchema, ModelFields } from "@grafbase/sdk";
 
-const User = g.model("User", {
-  name: g.string().length({ min: 2, max: 20 }),
-  email: g.string().unique(),
-  avatarUrl: g.url(),
-  description: g.string().optional(),
-  githubUrl: g.url().optional(),
-  linkedinUrl: g.url().optional(),
-  projects: g
-    .relation(() => Project)
-    .list()
-    .optional(),
-});
+const schema = new GrafbaseSchema();
 
-const Project = g.model("Project", {
-  title: g.string().length({ min: 3 }),
-  description: g.string(),
-  image: g.url(),
-  liveSiteUrl: g.url(),
-  githubUrl: g.url(),
-  category: g.string().search(),
-  createdBy: g.relation(() => User),
-});
-export default config({
-  schema: g,
-});
+const UserFields: ModelFields = {
+  name: {
+    type: schema.string().length({ min: 2, max: 20 }),
+  },
+  email: {
+    type: schema.string().unique(),
+  },
+  avatarUrl: {
+    type: schema.url(),
+  },
+  description: { type: schema.string().optional() },
+  githubUrl: { type: schema.url().optional() },
+  linkedinUrl: { type: schema.url().optional() },
+  projects: {
+    type: schema
+      .relation(() => Project)
+      .list()
+      .optional(),
+  },
+};
+
+const User = schema.defineModel("User", UserFields);
+
+const ProjectFields: ModelFields = {
+  title: { type: schema.string().length({ min: 3 }) },
+  description: { type: schema.string() },
+  image: { type: schema.url() },
+  liveSiteUrl: { type: schema.url() },
+  githubUrl: { type: schema.url() },
+  category: { type: schema.string().search() },
+  createdBy: { type: schema.relation(() => User) },
+};
+
+const Project = schema.defineModel("Project", ProjectFields);
+
+export default schema;
