@@ -1,5 +1,5 @@
 import { config, connector, g } from "@grafbase/sdk";
-
+//@ts-ignore
 const mongo = connector.MongoDB("MongoDB", {
   apiKey: g.env("MONGODB_API_KEY"),
   url: g.env("MONGODB_API_URL"),
