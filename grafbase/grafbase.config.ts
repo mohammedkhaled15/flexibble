@@ -1,7 +1,18 @@
-import { g, config, auth } from "@grafbase/sdk";
+import { g, config, connector, auth } from "@grafbase/sdk";
 
+const contentful = connector.GraphQL("Contentful", {
+  url: g.env("NEXT_PUBLIC_GRAFBASE_API_URL"),
+  headers: (headers) => {
+    headers.set(
+      "Authorization",
+      `Bearer ${g.env("NEXT_PUBLIC_GRAFBASE_API_KEY")}`
+    );
+  },
+});
+
+g.datasource(contentful);
 // @ts-ignore
-const User = g.type("User", {
+const User = g.model("User", {
   name: g.string().length({ min: 2, max: 100 }),
   email: g.string().unique(),
   avatarUrl: g.url(),
@@ -15,7 +26,7 @@ const User = g.type("User", {
 });
 
 // @ts-ignore
-const Project = g.type("Project", {
+const Project = g.model("Project", {
   title: g.string().length({ min: 3 }),
   description: g.string(),
   image: g.url(),
