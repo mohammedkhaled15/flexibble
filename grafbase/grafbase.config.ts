@@ -13,20 +13,27 @@ export default config({
   schema: g,
 });
 
-const address = g
-  .type("Address", {
-    street: g.string(),
-    city: g.string(),
-    country: g.string(),
-  })
-  .collection("addresses");
+// const address = g
+//   .type("Address", {
+//     street: g.string(),
+//     city: g.string(),
+//     country: g.string(),
+//   })
+//   .collection("addresses");
+// mongo
+//   .model("Address", {
+//     street: g.string(),
+//     city: g.string(),
+//     country: g.string(),
+//   })
+//   .collection("addresses");
 
 mongo
   .model("User", {
     name: g.string(),
     email: g.string(),
     age: g.int().optional(),
-    address: g.ref(address).optional(),
+    // address: g.ref(address).optional(),
     metadata: g.json().optional(),
   })
   .collection("users");
