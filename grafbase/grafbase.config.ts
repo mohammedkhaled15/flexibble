@@ -15,7 +15,6 @@ const mongo = connector.MongoDB("MongoDB", {
      city: g.string(),
     country: g.string(),
    })
-  .collection("addresses");
 
  //mongo.model("Address", {
  //  street: g.string(),
