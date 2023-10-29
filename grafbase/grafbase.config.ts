@@ -7,11 +7,7 @@ const mongo = connector.MongoDB("MongoDB", {
   database: g.env("MONGODB_DATABASE"),
 });
 
-g.datasource(mongo);
 
-export default config({
-  schema: g,
-});
 
 // const address = g
 //   .type("Address", {
@@ -37,3 +33,10 @@ mongo
     metadata: g.json().optional(),
   })
   .collection("users");
+
+g.datasource(mongo);
+
+export default config({
+  schema: g,
+});
+
