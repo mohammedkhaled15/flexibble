@@ -7,17 +7,8 @@ const mongo = connector.MongoDB("MongoDB", {
   database: g.env("MONGODB_DATABASE"),
 });
 
-mongo.model("Project", {
-  title: g.string().length({ min: 3 }),
-  description: g.string(),
-  image: g.url(),
-  liveSiteUrl: g.url(),
-  githubUrl: g.url(),
-  category: g.string().search(),
-  createdBy: g.relation("User"),
-});
-
-mongo
+//@ts-ignore
+const User = mongo
   .model("User", {
     name: g.string().length({ min: 2, max: 100 }),
     email: g.string().unique(),
@@ -25,9 +16,28 @@ mongo
     description: g.string().length({ min: 2, max: 1000 }).optional(),
     githubUrl: g.url().optional(),
     linkedinUrl: g.url().optional(),
-    projects: g.ref(Project).list().optional(),
+    //@ts-ignore
+    projects: g
+      .relation(() => Project)
+      .list()
+      .optional(),
   })
   .collection("users");
+
+//@ts-ignore
+const Project = mongo
+  .model("Project", {
+    title: g.string().length({ min: 3 }),
+    description: g.string(),
+    image: g.url(),
+    liveSiteUrl: g.url(),
+    githubUrl: g.url(),
+    //@ts-ignore
+    category: g.string().search(),
+    //@ts-ignore
+    createdBy: g.relation(() => User),
+  })
+  .collection("projects");
 
 g.datasource(mongo);
 
