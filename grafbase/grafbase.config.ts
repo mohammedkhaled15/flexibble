@@ -16,11 +16,10 @@ const User = mongo
     description: g.string().length({ min: 2, max: 1000 }).optional(),
     githubUrl: g.url().optional(),
     linkedinUrl: g.url().optional(),
-    //@ts-ignore
-    projects: g
-      .relation(() => Project)
-      .list()
-      .optional(),
+    // projects: g
+    //   .relation(() => Project)
+    //   .list()
+    //   .optional(),
   })
   .collection("users");
 
@@ -32,10 +31,8 @@ const Project = mongo
     image: g.url(),
     liveSiteUrl: g.url(),
     githubUrl: g.url(),
-    //@ts-ignore
-    category: g.string().search(),
-    //@ts-ignore
-    createdBy: g.relation(() => User),
+    // category: g.string().search(),
+    // createdBy: g.relation(() => User),
   })
   .collection("projects");
 
