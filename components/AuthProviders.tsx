@@ -16,7 +16,7 @@ type Providers = Record<string, Provider>
 
 const AuthProviders = () => {
   const [providers, setProviders] = useState<Providers | null>(null)
-
+  console.log(providers)
   useEffect(() => {
     const fetchProviders = async () => {
       const res = await getProviders()
@@ -31,7 +31,7 @@ const AuthProviders = () => {
       <div>
         {
           Object.values(providers).map((provider: Provider, i) => (
-            <button key={i} onClick={() => signIn(provider?.id)}>{provider.id}</button>
+            <button key={i} onClick={() => signIn(provider?.id)}>Sign in with {provider.name}</button>
           ))
         }
       </div>

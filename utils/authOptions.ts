@@ -22,14 +22,15 @@ const authOptions: NextAuthOptions = {
     async session({ session }) {
       try {
         const currentUserEmail = session?.user?.email;
-        const projects = await prisma.project.findMany({
-          where: { userEmail: currentUserEmail! },
+        const userObject = await prisma.user.findUnique({
+          where: { email: currentUserEmail! },
+          include: { projects: true },
         });
         const newSession = {
           ...session,
           user: {
             ...session.user,
-            projects: [...projects],
+            ...userObject,
           },
         };
         return newSession;
