@@ -1,6 +1,5 @@
 import { Menu } from "@headlessui/react"
 import Image from "next/image"
-import { Fragment } from "react"
 
 type Props = {
   title: string,
@@ -35,7 +34,9 @@ const CustomMenu = ({ title, state, filters, setState }: Props) => {
                 value={tag}
                 className="custom_menu-item"
                 onClick={(e) => setState(e.currentTarget.value)}
-              ></button>
+              >
+                {tag}
+              </button>
             </Menu.Item>
           ))}
         </Menu.Items>
