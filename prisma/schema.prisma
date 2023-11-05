@@ -62,4 +62,6 @@ model Project {
   category    String
   userEmail   String
   createdBy   User   @relation(fields: [userEmail], references: [email])
+  
+  @@unique([title, userEmail])
 }

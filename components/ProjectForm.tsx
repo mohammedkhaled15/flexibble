@@ -15,18 +15,28 @@ type ProjectFormProps = {
 
 const ProjectForm = ({ type, session }: ProjectFormProps) => {
 
-  const handleFormSubmit = (e: React.FormEvent) => { }
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    try {
+      if (type === "create") {
+        const res = await fetch("/api/projects", {
+          method: "POST",
+          body: JSON.stringify(form)
+        })
+        if (res.ok) setIsSubmitting(false)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-
     const file = e.target.files?.[0]
-
     if (!file) return;
-
     if (!file.type.includes("image")) {
       return alert("Please upload an image file")
     }
-
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
@@ -110,7 +120,7 @@ const ProjectForm = ({ type, session }: ProjectFormProps) => {
 
       <div className="flexStart w-full">
         <Button
-          title={isSubmitting ? `${type === "create" ? "Creating" : "Editing"}` : `${type === "create" ? "Crate" : "Edit"}`}
+          title={isSubmitting ? `${type === "create" ? "Creating" : "Editing"}` : `${type === "create" ? "Create" : "Edit"}`}
           type="submit"
           leftIcon={isSubmitting ? "" : "/plus.svg"}
           isSubmitting={isSubmitting}
