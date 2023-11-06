@@ -1,12 +1,14 @@
 "use client"
 
 import { SessionInterface } from "@/common.types"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { ChangeEvent, useState } from "react"
 import FormField from "./FormField"
 import { categoryFilters } from "@/constants"
 import CustomMenu from "./CustomMenu"
 import Button from "./Button"
+import { uploadImage } from "@/lib/actions"
 
 type ProjectFormProps = {
   type: string,
@@ -15,16 +17,22 @@ type ProjectFormProps = {
 
 const ProjectForm = ({ type, session }: ProjectFormProps) => {
 
+  const router = useRouter()
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     try {
       if (type === "create") {
-        const res = await fetch("/api/projects", {
-          method: "POST",
-          body: JSON.stringify(form)
-        })
-        if (res.ok) setIsSubmitting(false)
+        const imgUrl = await uploadImage(form.image)
+        if (imgUrl.url) {
+          const res = await fetch("/api/projects", {
+            method: "POST",
+            body: JSON.stringify({ ...form, image: imgUrl.url })
+          })
+          if (res.ok) setIsSubmitting(false)
+          router.push("/")
+        }
       }
     } catch (error) {
       console.log(error)
@@ -35,7 +43,8 @@ const ProjectForm = ({ type, session }: ProjectFormProps) => {
     const file = e.target.files?.[0]
     if (!file) return;
     if (!file.type.includes("image")) {
-      return alert("Please upload an image file")
+      alert("Please upload an image file")
+      return
     }
     const reader = new FileReader()
     reader.readAsDataURL(file)
@@ -72,7 +81,7 @@ const ProjectForm = ({ type, session }: ProjectFormProps) => {
           accept="image/*"
           required={type === "create"}
           className="form_image-input"
-          onChange={handleChangeImage}
+          onChange={(e) => handleChangeImage(e)}
         />
         {form.image && (
           <Image
