@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
+import { getCurrentUser } from "@/utils/authOptions";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -9,6 +10,10 @@ cloudinary.config({
 
 export const POST = async (request: Request, response: Response) => {
   const { path } = await request.json();
+  const session = await getCurrentUser();
+  if (!session) {
+    return NextResponse.json({ message: "Not Allowed Entry" }, { status: 401 });
+  }
   if (!path)
     return NextResponse.json(
       { message: "Image Path is required" },
@@ -21,7 +26,6 @@ export const POST = async (request: Request, response: Response) => {
       overwrite: true,
       transformation: [{ width: 1000, height: 752, crop: "scale" }],
     };
-
     const res = await cloudinary.uploader.upload(path, options);
     console.log(res);
     return NextResponse.json(res, { status: 200 });

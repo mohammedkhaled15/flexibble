@@ -15,7 +15,7 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   theme: {
-    colorScheme: "light",
+    colorScheme: "dark",
     logo: "/logo.png",
   },
   callbacks: {
