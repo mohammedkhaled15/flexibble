@@ -9,7 +9,7 @@ import ProfileMenu from './ProfileMenu'
 const Navbar = async () => {
 
   const session = await getCurrentUser()
-  console.log(session)
+  // console.log(session)
 
   return (
     <nav className="flexBetween navbar">

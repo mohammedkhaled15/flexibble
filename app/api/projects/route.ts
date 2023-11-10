@@ -12,7 +12,7 @@ export const POST = async (req: Request, res: Response) => {
     const project = await prisma.project.create({
       data: {
         ...body,
-        userEmail: session.user.email
+        userEmail: session.user.email,
       },
     });
     console.log(project);
@@ -20,5 +20,17 @@ export const POST = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     return NextResponse.json({ error }, { status: 500 });
+  }
+};
+
+export const GET = async (req: Request, res: Response) => {
+  // const session = await getCurrentUser();
+  try {
+    const projects = await prisma.project.findMany({
+      include: { createdBy: true },
+    });
+    return NextResponse.json(projects, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(error, { status: 500 });
   }
 };

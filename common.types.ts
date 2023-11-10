@@ -22,6 +22,7 @@ export interface ProjectInterface {
     email: string;
     avatarUrl: string;
     id: string;
+    image: string;
   };
 }
 
