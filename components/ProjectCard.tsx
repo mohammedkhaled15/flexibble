@@ -1,5 +1,8 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
+import { useEffect, useRef, useState } from "react";
 
 type ProjectProps = {
   key: string,
@@ -12,6 +15,15 @@ type ProjectProps = {
 }
 
 const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, }: ProjectProps) => {
+
+  const [randomLikes, setRandomLikes] = useState(0);
+  const [randomViews, setRandomViews] = useState('');
+  useEffect(() => {
+    setRandomLikes(Math.floor(Math.random() * 10000))
+    setRandomViews(String((Math.floor(Math.random() * 10000) / 1000).toFixed(1) + 'k'))
+  }, []);
+
+  const [hover, setHover] = useState(false)
   return (
     <div key={key} className="flexCenter flex-col rounded-2xl drop-shadow-card">
       <Link className="flexCenter group relative w-full h-full" href={`/projects/${id}`}>
@@ -37,8 +49,34 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, }: Projec
               className="rounded-full"
               alt="profile image"
             />
+            <p className="text-sm">{name}</p>
           </div>
         </Link>
+
+        <div className="flexCenter gap-3">
+          <div className="flexCenter gap-2 ">
+            <Image
+              src={`${hover ? "/heart-purple.svg" : "/heart.svg"}`}
+              width={13}
+              height={12}
+              alt="heart"
+              onMouseEnter={() => setHover(true)}
+              onMouseOut={() => setHover(false)}
+              className="cursor-pointer"
+            />
+            <p className="text-sm">{randomLikes}</p>
+          </div>
+          <div className="flexCenter gap-2">
+            <Image
+              src={"/eye.svg"}
+              width={13}
+              height={12}
+              alt="eye"
+            />
+            <p className="text-sm">{randomViews}</p>
+          </div>
+
+        </div>
       </div>
     </div>
   )
