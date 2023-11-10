@@ -3,10 +3,7 @@ import { NextAuthOptions, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./connectDb";
-import { AdapterUser } from "next-auth/adapters";
 import { SessionInterface } from "@/common.types";
-import jsonwebtoken from "jsonwebtoken";
-import { JWT } from "next-auth/jwt";
 
 const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
