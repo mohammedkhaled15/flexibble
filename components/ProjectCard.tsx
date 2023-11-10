@@ -9,9 +9,9 @@ type ProjectProps = {
   id: string,
   image: string,
   title: string,
-  name: string,
-  avatarUrl: string,
-  userId: string,
+  name: string | null,
+  avatarUrl: string | null,
+  userId: string | null,
 }
 
 const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, }: ProjectProps) => {
@@ -26,7 +26,7 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, }: Projec
   const [hover, setHover] = useState(false)
   return (
     <div key={key} className="flexCenter flex-col rounded-2xl drop-shadow-card">
-      <Link className="flexCenter group relative w-full h-full" href={`/projects/${id}`}>
+      <Link className="flexCenter group relative w-full h-full" href={`/project/${id}`}>
         <Image
           src={image}
           width={414}
@@ -42,13 +42,13 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, }: Projec
       <div className="flexBetween w-full px-2 mt-3 font-semibold text-sm">
         <Link href={`/profile/${userId}`}>
           <div className="flexCenter gap-2">
-            <Image
+            {avatarUrl && <Image
               src={avatarUrl}
               width={24}
               height={24}
               className="rounded-full"
               alt="profile image"
-            />
+            />}
             <p className="text-sm">{name}</p>
           </div>
         </Link>

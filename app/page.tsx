@@ -5,7 +5,7 @@ import { getAllProjects } from "@/lib/actions"
 const Home = async () => {
   const projects = await getAllProjects()
 
-  if (projects.length === 0) {
+  if (projects?.length === 0) {
     return (
       <section className="flexStart flex-col paddings">
         Categories
@@ -19,7 +19,7 @@ const Home = async () => {
       <h1>Categories</h1>
       <section className="projects-grid">
         {
-          projects.map((project: ProjectInterface) => (
+          projects?.map((project: ProjectInterface) => (
             <ProjectCard
               key={project?.id}
               id={project?.id}

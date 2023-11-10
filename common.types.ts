@@ -17,12 +17,15 @@ export interface ProjectInterface {
   githubUrl: string;
   category: string;
   id: string;
+  userEmail: string;
   createdBy: {
-    name: string;
-    email: string;
-    avatarUrl: string;
-    id: string;
-    image: string;
+    name: string | null;
+    email: string | null;
+    githubUrl: string | null;
+    avatarUrl: string | null;
+    id: string | null;
+    image: string | null;
+    linkedinUrl: string | null;
   };
 }
 

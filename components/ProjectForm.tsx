@@ -8,7 +8,7 @@ import FormField from "./FormField"
 import { categoryFilters } from "@/constants"
 import CustomMenu from "./CustomMenu"
 import Button from "./Button"
-import { uploadImage } from "@/lib/actions"
+import { createProject, uploadImage } from "@/lib/actions"
 
 type ProjectFormProps = {
   type: string,
@@ -24,13 +24,18 @@ const ProjectForm = ({ type, session }: ProjectFormProps) => {
     setIsSubmitting(true)
     try {
       if (type === "create") {
-        const imgUrl = await uploadImage(form.image)
-        if (imgUrl.url) {
-          const res = await fetch("/api/projects", {
-            method: "POST",
-            body: JSON.stringify({ ...form, image: imgUrl.url })
-          })
-          if (res.ok) setIsSubmitting(false)
+        // const imgUrl = await uploadImage(form.image)
+        // if (imgUrl.url) {
+        //   const res = await fetch("/api/projects", {
+        //     method: "POST",
+        //     body: JSON.stringify({ ...form, image: imgUrl.url })
+        //   })
+        //   if (res.ok) setIsSubmitting(false)
+        //   router.push("/")
+        // }
+        const project = await createProject(form.image, form)
+        if (project) {
+          setIsSubmitting(false)
           router.push("/")
         }
       }

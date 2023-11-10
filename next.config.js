@@ -4,8 +4,9 @@ const nextConfig = {
     domains: ["lh3.googleusercontent.com", "res.cloudinary.com", "task.com"],
   },
   experimental: {
-    serverComponentsExternalPackages: ["cloudinary", "graphql-request"],
+    serverComponentsExternalPackages: ["cloudinary"],
     serverActions: true,
+    serverActionsBodySizeLimit: "20mb",
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
