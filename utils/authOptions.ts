@@ -5,6 +5,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./connectDb";
 import { AdapterUser } from "next-auth/adapters";
 import { SessionInterface } from "@/common.types";
+import jsonwebtoken from "jsonwebtoken";
+import { JWT } from "next-auth/jwt";
 
 const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -19,7 +21,12 @@ const authOptions: NextAuthOptions = {
     logo: "/logo.png",
   },
   callbacks: {
-    async session({ session }) {
+    // async jwt({ token, user }) {
+    //   console.log(`user: ${user}`);
+    //   console.log(`token: ${token}`);
+    //   return { ...token, ...user };
+    // },
+    async session({ session, token }) {
       try {
         const currentUserEmail = session?.user?.email;
         const userObject = await prisma.user.findUnique({

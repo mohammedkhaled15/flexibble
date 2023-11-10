@@ -4,13 +4,12 @@ import Link from 'next/link'
 import React from 'react'
 import AuthProviders from './AuthProviders'
 import { getCurrentUser } from '@/utils/authOptions'
-import SignOut from './SignOut'
 import ProfileMenu from './ProfileMenu'
 
 const Navbar = async () => {
 
   const session = await getCurrentUser()
-  // console.log(session?.user)
+  console.log(session)
 
   return (
     <nav className="flexBetween navbar">
