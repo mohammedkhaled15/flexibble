@@ -18,7 +18,7 @@ const EditPage = async ({ params }: Props) => {
   }
   return (
     <Modal>
-      <h3 className="modal-head-text">Edit a New Project</h3>
+      <h3 className="modal-head-text">Edit a  Project</h3>
       <ProjectForm projectId={params.id} type="edit" session={session} />
     </Modal>
   )
