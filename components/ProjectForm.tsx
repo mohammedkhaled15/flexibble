@@ -24,9 +24,10 @@ const ProjectForm = ({ type, projectId, session }: ProjectFormProps) => {
     const getProject = async () => {
       const projectToEdit = await getProjectById(projectId)
       if (projectToEdit) {
-        for (const key of Object.keys(form)) {
+        const formKeys = Object.keys(form) as Array<keyof typeof form>
+        formKeys.map((key) => {
           setForm(prev => ({ ...prev, [key]: projectToEdit[key] }))
-        }
+        })
       }
     }
     getProject()

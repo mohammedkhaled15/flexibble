@@ -70,10 +70,6 @@ export const getProjectById = async (id: string) => {
       include: { createdBy: true },
     });
     return project;
-    // const res = await fetch(`${baseUrl()}/api/project/?id=${id}`, {
-    //   method: "GET",
-    // });
-    // return res.json();
   } catch (error) {
     console.log(error);
   }

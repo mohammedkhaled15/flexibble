@@ -20,7 +20,7 @@ const ProjectPage = async ({ params }: Props) => {
   const project = await getProjectById(params.id) as ProjectInterface
 
   if (!project) {
-    <p>Fialed to fetch project information</p>
+    <p>Failed to fetch project information</p>
   }
 
   const renderLink = () => `/profile/${project?.createdBy?.id}`

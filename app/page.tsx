@@ -3,7 +3,7 @@ import ProjectCard from "@/components/ProjectCard"
 import { getAllProjects } from "@/lib/actions"
 
 const Home = async () => {
-  const projects = await getAllProjects()
+  const projects = await getAllProjects("", "")
 
   if (projects?.length === 0) {
     return (
