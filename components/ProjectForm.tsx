@@ -3,21 +3,34 @@
 import { SessionInterface } from "@/common.types"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import FormField from "./FormField"
 import { categoryFilters } from "@/constants"
 import CustomMenu from "./CustomMenu"
 import Button from "./Button"
-import { createProject, uploadImage } from "@/lib/actions"
+import { createProject, getProjectById, uploadImage } from "@/lib/actions"
 
 type ProjectFormProps = {
   type: string,
-  session: SessionInterface
+  session: SessionInterface,
+  projectId: string
 }
 
-const ProjectForm = ({ type, session }: ProjectFormProps) => {
+const ProjectForm = ({ type, projectId, session }: ProjectFormProps) => {
 
   const router = useRouter()
+
+  useEffect(() => {
+    const getProject = async () => {
+      const projectToEdit = await getProjectById(projectId)
+      if (projectToEdit) {
+        for (const [key, value] of Object.entries(projectToEdit)) {
+          setForm(prev => ({ ...prev, [key]: value }))
+        }
+      }
+    }
+    getProject()
+  }, [])
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -91,7 +104,7 @@ const ProjectForm = ({ type, session }: ProjectFormProps) => {
 
       <FormField
         title="Title"
-        state={form.title}
+        state={form?.title}
         placeholder="Flexibble"
         setState={(value: string) => handleStateChange("title", value)}
       />

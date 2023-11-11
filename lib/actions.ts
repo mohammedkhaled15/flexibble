@@ -3,6 +3,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { getCurrentUser } from "@/utils/authOptions";
 import prisma from "@/utils/connectDb";
 import { ProjectForm, ProjectInterface } from "@/common.types";
+import { revalidatePath } from "next/cache";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -44,6 +45,7 @@ export const createProject = async (image: string, formObject: ProjectForm) => {
     const newProject = await prisma.project.create({
       data: { ...formObject, image: imgUrl.url, userEmail: session.user.email },
     });
+    if (newProject) revalidatePath("/");
     return newProject;
   } catch (error) {
     console.log(error);
@@ -102,7 +104,8 @@ export const deleteProject = async (projectId: string) => {
   if (!session) return;
   try {
     const res = await prisma.project.delete({ where: { id: projectId } });
-    return res
+    revalidatePath("/");
+    return res;
   } catch (error) {
     console.log(error);
   }

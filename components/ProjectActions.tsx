@@ -1,7 +1,6 @@
 "use client"
 
 import { deleteProject } from "@/lib/actions"
-import { revalidatePath } from "next/cache"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -21,7 +20,6 @@ const ProjectActions = ({ projectId }: Props) => {
     try {
       const res = await deleteProject(projectId)
       if (res) {
-        revalidatePath("/")
         router.push("/")
       }
     } catch (error) {
