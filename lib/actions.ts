@@ -82,3 +82,28 @@ export const getProjectById = async (id: string) => {
     console.log(error);
   }
 };
+
+//Get user full profile
+export const getUserFullProfile = async (id: string) => {
+  try {
+    const userProfile = await prisma.user.findUnique({
+      where: { id },
+      include: { projects: { include: { createdBy: true } } },
+    });
+    return userProfile;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//Delete Project
+export const deleteProject = async (projectId: string) => {
+  const session = await getCurrentUser();
+  if (!session) return;
+  try {
+    const res = await prisma.project.delete({ where: { id: projectId } });
+    return res
+  } catch (error) {
+    console.log(error);
+  }
+};

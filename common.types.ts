@@ -10,20 +10,20 @@ export type FormState = {
 };
 
 export interface ProjectInterface {
+  id: string;
   title: string;
   description: string;
   image: string;
   liveSiteUrl: string;
   githubUrl: string;
   category: string;
-  id: string;
-  userEmail: string;
+  // userEmail: string;
   createdBy: {
+    id: string;
     name: string | null;
-    email: string | null;
+    email: string;
     githubUrl: string | null;
     avatarUrl: string | null;
-    id: string | null;
     image: string | null;
     linkedinUrl: string | null;
   };

@@ -11,7 +11,7 @@ type ProjectProps = {
   title: string,
   name: string | null,
   avatarUrl: string | null,
-  userId: string | null,
+  userId: string,
 }
 
 const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, }: ProjectProps) => {

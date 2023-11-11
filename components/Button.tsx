@@ -6,7 +6,7 @@ type Props = {
   leftIcon?: string | null,
   rightIcon?: string | null,
   handleClick?: MouseEventHandler,
-  isSubmitting: boolean,
+  isSubmitting?: boolean,
   type?: "button" | "submit",
   bgColor?: string,
   textColor?: string
@@ -17,6 +17,7 @@ const Button = ({ title, leftIcon, rightIcon, handleClick, isSubmitting, type, b
     <button
       type={type || "button"}
       disabled={isSubmitting}
+      onClick={handleClick}
       className={`
       flexCenter gap-3  p-3 rounded-xl text-sm font-medium  
       ${textColor || "text-white"}

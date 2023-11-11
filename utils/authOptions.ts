@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./connectDb";
 import { SessionInterface } from "@/common.types";
+import { randomBytes, randomUUID } from "crypto";
 
 const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -18,11 +19,6 @@ const authOptions: NextAuthOptions = {
     logo: "/logo.png",
   },
   callbacks: {
-    // async jwt({ token, user }) {
-    //   console.log(`user: ${user}`);
-    //   console.log(`token: ${token}`);
-    //   return { ...token, ...user };
-    // },
     async session({ session, token }) {
       try {
         const currentUserEmail = session?.user?.email;
