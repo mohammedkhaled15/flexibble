@@ -8,7 +8,7 @@ import FormField from "./FormField"
 import { categoryFilters } from "@/constants"
 import CustomMenu from "./CustomMenu"
 import Button from "./Button"
-import { createProject, getProjectById, uploadImage } from "@/lib/actions"
+import { UpdateProject, createProject, getProjectById, uploadImage } from "@/lib/actions"
 
 type ProjectFormProps = {
   type: string,
@@ -24,8 +24,8 @@ const ProjectForm = ({ type, projectId, session }: ProjectFormProps) => {
     const getProject = async () => {
       const projectToEdit = await getProjectById(projectId)
       if (projectToEdit) {
-        for (const [key, value] of Object.entries(projectToEdit)) {
-          setForm(prev => ({ ...prev, [key]: value }))
+        for (const key of Object.keys(form)) {
+          setForm(prev => ({ ...prev, [key]: projectToEdit[key] }))
         }
       }
     }
@@ -39,6 +39,12 @@ const ProjectForm = ({ type, projectId, session }: ProjectFormProps) => {
       if (type === "create") {
         const project = await createProject(form.image, form)
         if (project) {
+          setIsSubmitting(false)
+          router.push("/")
+        }
+      } else if (type === "edit") {
+        const updatedProject = await UpdateProject(projectId, form)
+        if (updatedProject) {
           setIsSubmitting(false)
           router.push("/")
         }

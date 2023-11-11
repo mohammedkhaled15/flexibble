@@ -2,7 +2,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { getCurrentUser } from "@/utils/authOptions";
 import prisma from "@/utils/connectDb";
-import { ProjectForm, ProjectInterface } from "@/common.types";
+import { ProjectForm } from "@/common.types";
 import { revalidatePath } from "next/cache";
 
 cloudinary.config({
@@ -10,12 +10,6 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
-const baseUrl = () => {
-  return process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : "example.com";
-};
 
 //Upload Image
 export const uploadImage = async (imagePath: string) => {
@@ -106,6 +100,30 @@ export const deleteProject = async (projectId: string) => {
     const res = await prisma.project.delete({ where: { id: projectId } });
     revalidatePath("/");
     return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//Edit Project
+export const UpdateProject = async (
+  projectId: string,
+  formObject: ProjectForm
+) => {
+  const session = await getCurrentUser();
+  if (!session) return;
+  try {
+    // const project = await prisma.project.findUnique({
+    //   where: { id: projectId },
+    // });
+    // if(project?.image === )
+    const updatedProject = await prisma.project.update({
+      where: { id: projectId },
+      data: { ...formObject },
+    });
+    // console.log(formObject)
+    revalidatePath("/");
+    return updatedProject;
   } catch (error) {
     console.log(error);
   }
