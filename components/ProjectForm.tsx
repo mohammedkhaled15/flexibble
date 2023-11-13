@@ -1,6 +1,6 @@
 "use client"
 
-import { SessionInterface } from "@/common.types"
+import { ProjectInterface, SessionInterface } from "@/common.types"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { ChangeEvent, useEffect, useState } from "react"
@@ -8,30 +8,27 @@ import FormField from "./FormField"
 import { categoryFilters } from "@/constants"
 import CustomMenu from "./CustomMenu"
 import Button from "./Button"
-import { UpdateProject, createProject, getProjectById, uploadImage } from "@/lib/actions"
+import { UpdateProject, createProject } from "@/lib/actions"
 
 type ProjectFormProps = {
   type: string,
   session: SessionInterface,
-  projectId: string
+  projectToEdit?: ProjectInterface | null
 }
 
-const ProjectForm = ({ type, projectId, session }: ProjectFormProps) => {
+const ProjectForm = ({ type, projectToEdit, session }: ProjectFormProps) => {
 
   const router = useRouter()
 
-  useEffect(() => {
-    const getProject = async () => {
-      const projectToEdit = await getProjectById(projectId)
-      if (projectToEdit) {
-        const formKeys = Object.keys(form) as Array<keyof typeof form>
-        formKeys.map((key) => {
-          setForm(prev => ({ ...prev, [key]: projectToEdit[key] }))
-        })
-      }
-    }
-    getProject()
-  }, [])
+  // useEffect(() => {
+  //   // const projectToEdit = await getProjectById(projectId)
+  //   if (projectToEdit) {
+  //     const formKeys = Object.keys(form) as Array<keyof typeof form>
+  //     formKeys.map((key) => {
+  //       setForm(prev => ({ ...prev, [key]: projectToEdit[key] }))
+  //     })
+  //   }
+  // }, [])
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -43,8 +40,8 @@ const ProjectForm = ({ type, projectId, session }: ProjectFormProps) => {
           setIsSubmitting(false)
           router.push("/")
         }
-      } else if (type === "edit") {
-        const updatedProject = await UpdateProject(projectId, form)
+      } else if (type === "edit" && projectToEdit) {
+        const updatedProject = await UpdateProject(projectToEdit?.id, form)
         if (updatedProject) {
           setIsSubmitting(false)
           router.push("/")
@@ -77,12 +74,12 @@ const ProjectForm = ({ type, projectId, session }: ProjectFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [form, setForm] = useState({
-    title: "",
-    description: "",
-    image: "",
-    liveSiteUrl: "",
-    githubUrl: "",
-    category: ""
+    title: projectToEdit?.title || "",
+    description: projectToEdit?.description || "",
+    image: projectToEdit?.image || "",
+    liveSiteUrl: projectToEdit?.liveSiteUrl || "",
+    githubUrl: projectToEdit?.githubUrl || "",
+    category: projectToEdit?.category || ""
   })
 
   return (

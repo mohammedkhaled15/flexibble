@@ -3,6 +3,7 @@ import React from 'react'
 import { redirect } from 'next/navigation';
 import Modal from '@/components/Modal';
 import ProjectForm from '@/components/ProjectForm';
+import { getProjectById } from '@/lib/actions';
 
 type Props = {
   params: {
@@ -11,15 +12,17 @@ type Props = {
 }
 
 const EditPage = async ({ params }: Props) => {
-  const session = await getCurrentUser()
 
+  const session = await getCurrentUser()
   if (!session) {
     redirect("/")
   }
+
+  const projectToEdit = await getProjectById(params.id)
   return (
     <Modal>
       <h3 className="modal-head-text">Edit a  Project</h3>
-      <ProjectForm projectId={params.id} type="edit" session={session} />
+      <ProjectForm projectToEdit={projectToEdit} type="edit" session={session} />
     </Modal>
   )
 }

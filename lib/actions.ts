@@ -23,6 +23,7 @@ export const uploadImage = async (imagePath: string) => {
       transformation: [{ width: 1000, height: 752, crop: "scale" }],
     };
     const res = await cloudinary.uploader.upload(imagePath, options);
+    console.log("new image uploaded!");
     return res;
   } catch (error) {
     console.log(error);
@@ -108,14 +109,25 @@ export const UpdateProject = async (
 ) => {
   const session = await getCurrentUser();
   if (!session) return;
+  //check if user uploaded a new image or not by checking the pattern of form.image if it base64 data url then it changed
+  function isBase64DataURL(str: string) {
+    const base64DataURLPattern = /^data:image\/[a-zA-Z]+;base64,([^\s]+)$/;
+    return base64DataURLPattern.test(str);
+  }
+  let newFormObject = { ...formObject };
+  if (isBase64DataURL(formObject.image)) {
+    const imgUrl = await uploadImage(formObject.image);
+    if (imgUrl) {
+      newFormObject = {
+        ...formObject,
+        image: imgUrl.url,
+      };
+    }
+  }
   try {
-    // const project = await prisma.project.findUnique({
-    //   where: { id: projectId },
-    // });
-    // if(project?.image === )
     const updatedProject = await prisma.project.update({
       where: { id: projectId },
-      data: { ...formObject },
+      data: { ...newFormObject },
     });
     // console.log(formObject)
     revalidatePath("/");
