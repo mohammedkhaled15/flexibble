@@ -23,7 +23,6 @@ export const uploadImage = async (imagePath: string) => {
       transformation: [{ width: 1000, height: 752, crop: "scale" }],
     };
     const res = await cloudinary.uploader.upload(imagePath, options);
-    console.log("new image uploaded!");
     return res;
   } catch (error) {
     console.log(error);

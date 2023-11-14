@@ -20,16 +20,6 @@ const ProjectForm = ({ type, projectToEdit, session }: ProjectFormProps) => {
 
   const router = useRouter()
 
-  // useEffect(() => {
-  //   // const projectToEdit = await getProjectById(projectId)
-  //   if (projectToEdit) {
-  //     const formKeys = Object.keys(form) as Array<keyof typeof form>
-  //     formKeys.map((key) => {
-  //       setForm(prev => ({ ...prev, [key]: projectToEdit[key] }))
-  //     })
-  //   }
-  // }, [])
-
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
