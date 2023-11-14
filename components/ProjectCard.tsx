@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type ProjectProps = {
   key: string,
@@ -12,9 +12,10 @@ type ProjectProps = {
   name: string | null,
   avatarUrl: string | null,
   userId: string,
+  views: number
 }
 
-const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, }: ProjectProps) => {
+const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views }: ProjectProps) => {
 
   const [randomLikes, setRandomLikes] = useState(0);
   const [randomViews, setRandomViews] = useState('');
@@ -73,7 +74,7 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, }: Projec
               height={12}
               alt="eye"
             />
-            <p className="text-sm">{randomViews}</p>
+            <p className="text-sm">{views}</p>
           </div>
 
         </div>

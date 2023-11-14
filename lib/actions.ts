@@ -65,10 +65,12 @@ export const getAllProjects = async (category: string, endCursor: string) => {
 //Get Project By its ID
 export const getProjectById = async (id: string) => {
   try {
-    const project = await prisma.project.findUnique({
+    const project = await prisma.project.update({
       where: { id },
+      data: { views: { increment: 1 } },
       include: { createdBy: true },
     });
+    if (project) revalidatePath("/");
     return project;
   } catch (error) {
     console.log(error);

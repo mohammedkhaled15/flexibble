@@ -61,7 +61,9 @@ model Project {
   githubUrl   String
   category    String
   userEmail   String
+  views       Int    @default(0)
+  likes       Int    @default(0)
   createdBy   User   @relation(fields: [userEmail], references: [email])
-  
+
   @@unique([title, userEmail])
 }

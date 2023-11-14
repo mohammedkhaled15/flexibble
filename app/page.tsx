@@ -28,6 +28,7 @@ const Home = async () => {
               name={project?.createdBy?.name}
               avatarUrl={project?.createdBy?.image}
               userId={project?.createdBy?.id}
+              views={project?.views}
             />
           ))
         }
