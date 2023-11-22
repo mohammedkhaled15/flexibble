@@ -75,4 +75,6 @@ model Like {
   projectId         String
   userWhoLiked      User    @relation(fields: [userId], references: [id])
   projectWhichLiked Project @relation(fields: [projectId], references: [id])
+
+  @@unique([projectId,userId])
 }

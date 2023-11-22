@@ -74,12 +74,25 @@ export const getProjectById = async (id: string) => {
   }
 };
 
-//Get user full profile
+//Get user full profile By Id
 export const getUserFullProfile = async (id: string) => {
   try {
     const userProfile = await prisma.user.findUnique({
       where: { id },
       include: { projects: { include: { createdBy: true } } },
+    });
+    return userProfile;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//Get user full profile By email
+export const getUserFullProfileByEmail = async (email: string) => {
+  try {
+    const userProfile = await prisma.user.findUnique({
+      where: { email },
+      include: { likedProjects: true },
     });
     return userProfile;
   } catch (error) {
@@ -141,9 +154,21 @@ export const likeProject = async (projectId: string) => {
   if (!session) return;
 
   try {
-    const res = await prisma.like.create({
-      data: { userId: session.user.id, projectId },
-    });
+    const userProfile = await getUserFullProfileByEmail(session.user.email);
+    const likedProjectsIds = userProfile?.likedProjects.map(
+      (like) => like.projectId
+    );
+    if (likedProjectsIds?.includes(projectId)) {
+      const res = await prisma.like.create({
+        data: { userId: session.user.id, projectId },
+      });
+      return res;
+    } else {
+      const res = await prisma.like.deleteMany({
+        where: { projectId, userId: userProfile?.id },
+      });
+      return res;
+    }
   } catch (err) {
     console.log(err);
   }

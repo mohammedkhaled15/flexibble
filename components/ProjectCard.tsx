@@ -1,10 +1,11 @@
 "use client"
 
-import { likeProject } from "@/lib/actions";
+import { getUserFullProfileByEmail, likeProject } from "@/lib/actions";
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react";
 import { useSession } from 'next-auth/react'
+import { Like } from "@/common.types";
 
 type ProjectProps = {
   key: string,
@@ -15,28 +16,40 @@ type ProjectProps = {
   avatarUrl: string | null,
   userId?: string,
   views: number,
-  likedBy?: string[]
+  likedBy?: Like[]
 }
 
 const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, likedBy }: ProjectProps) => {
 
   const { data: session } = useSession()
-  console.log(likedBy)
-
-  const [randomLikes, setRandomLikes] = useState(0);
-  // const [randomViews, setRandomViews] = useState('');
-  useEffect(() => {
-    // setRandomLikes(Math.floor(Math.random() * 10000))
-    // setRandomViews(String((Math.floor(Math.random() * 10000) / 1000).toFixed(1) + 'k'))
-  }, []);
+  // console.log(session)
 
   const [hover, setHover] = useState(false)
-  const [clicked, setClicked] = useState(false)
+  // const [liked, setLiked] = useState(false)
+  const [likedProjects, setLikedProjects] = useState<string[]>()
+
+  useEffect(() => {
+    const getUserByEmail = async (email: string) => {
+      try {
+        const userProfile = await getUserFullProfileByEmail(email)
+        const likedProjectsIds = userProfile?.likedProjects.map(like => like.projectId)
+        console.log(likedProjectsIds, id)
+        setLikedProjects(likedProjectsIds)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    session?.user?.email && getUserByEmail(session?.user?.email)
+  }, [session?.user?.email])
 
   const handleLikeClick = async () => {
     if (session?.user?.email) {
-      setClicked(prev => !prev)
-      await likeProject(id)
+      const res = await likeProject(id)
+      if (res) {
+        setHover(prev => !prev)
+      }
+    } else {
+      return
     }
   }
 
@@ -72,16 +85,16 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, li
         <div className="flexCenter gap-3">
           <div className="flexCenter gap-2 ">
             <Image
-              src={`${hover || clicked ? "/heart-purple.svg" : "/heart.svg"}`}
+              src={`${hover || likedProjects?.includes(id) ? "/heart-purple.svg" : "/heart.svg"}`}
               width={13}
               height={12}
               alt="heart"
-              onMouseEnter={() => setHover(true)}
-              onMouseOut={() => setHover(false)}
+              onMouseEnter={() => (session && setHover(true))}
+              onMouseOut={() => (!likedProjects?.includes(id) && setHover(false))}
               onClick={handleLikeClick}
-              className="cursor-pointer"
+              className={`${session ? "cursor-pointer" : "cursor-default"}`}
             />
-            <p className="text-sm">{randomLikes}</p>
+            <p className="text-sm">{likedBy?.length}</p>
           </div>
           <div className="flexCenter gap-2">
             <Image

@@ -18,7 +18,7 @@ export interface ProjectInterface {
   githubUrl: string;
   category: string;
   views: number;
-  likedBy?:string[]
+  likedBy?:Like[]
   createdBy?: {
     id: string;
     name: string | null;
@@ -65,4 +65,10 @@ export interface ProjectForm {
   liveSiteUrl: string;
   githubUrl: string;
   category: string;
+}
+
+export interface Like{
+  id:string;
+  userId:string;
+  projectId:string;
 }
