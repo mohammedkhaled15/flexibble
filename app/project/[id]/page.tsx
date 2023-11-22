@@ -6,6 +6,7 @@ import { getProjectById } from '@/lib/actions'
 import { getCurrentUser } from '@/utils/authOptions'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Session } from 'next-auth';
 
 type Props = {
   params: {
@@ -103,7 +104,7 @@ const ProjectPage = async ({ params }: Props) => {
         <span className="w-full h-0.5 bg-light-white-200" />
       </section>
 
-      <RelatedProjects userId={project?.createdBy?.id} projectId={project?.id} />
+      {project?.createdBy?.id && <RelatedProjects userId={project.createdBy.id} projectId={project?.id} />}
     </Modal>
   )
 }

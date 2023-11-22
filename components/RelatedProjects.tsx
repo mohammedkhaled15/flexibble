@@ -34,6 +34,7 @@ const RelatedProjects = async ({ userId, projectId }: Props) => {
               name={project?.createdBy?.name}
               avatarUrl={project?.createdBy?.image}
               userId={project?.createdBy?.id}
+              views={project?.views}
             />
           )))
         }

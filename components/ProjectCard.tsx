@@ -12,8 +12,8 @@ type ProjectProps = {
   id: string,
   image: string,
   title: string,
-  name: string | null,
-  avatarUrl: string | null,
+  name: string | null | undefined,
+  avatarUrl: string | null | undefined,
   userId?: string,
   views: number,
   likedBy?: Like[]
@@ -22,31 +22,31 @@ type ProjectProps = {
 const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, likedBy }: ProjectProps) => {
 
   const { data: session } = useSession()
-  // console.log(session)
 
   const [hover, setHover] = useState(false)
-  // const [liked, setLiked] = useState(false)
   const [likedProjects, setLikedProjects] = useState<string[]>()
 
-  useEffect(() => {
-    const getUserByEmail = async (email: string) => {
-      try {
-        const userProfile = await getUserFullProfileByEmail(email)
-        const likedProjectsIds = userProfile?.likedProjects.map(like => like.projectId)
-        console.log(likedProjectsIds, id)
-        setLikedProjects(likedProjectsIds)
-      } catch (error) {
-        console.log(error)
-      }
+  const getUserByEmail = async (email: string) => {
+    try {
+      const userProfile = await getUserFullProfileByEmail(email)
+      const likedProjectsIds = userProfile?.likedProjects.map(like => like.projectId)
+      setLikedProjects(likedProjectsIds)
+    } catch (error) {
+      console.log(error)
     }
+  }
+  useEffect(() => {
     session?.user?.email && getUserByEmail(session?.user?.email)
   }, [session?.user?.email])
 
   const handleLikeClick = async () => {
     if (session?.user?.email) {
       const res = await likeProject(id)
-      if (res) {
-        setHover(prev => !prev)
+      await getUserByEmail(session.user.email)
+      if (res === "liked") {
+        setHover(true)
+      } else {
+        setHover(false)
       }
     } else {
       return

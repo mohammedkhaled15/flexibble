@@ -162,12 +162,14 @@ export const likeProject = async (projectId: string) => {
       const res = await prisma.like.create({
         data: { userId: session.user.id, projectId },
       });
-      return res;
+      revalidatePath("/");
+      return "liked";
     } else {
       const res = await prisma.like.deleteMany({
         where: { projectId, userId: userProfile?.id },
       });
-      return res;
+      revalidatePath("/");
+      return;
     }
   } catch (err) {
     console.log(err);
