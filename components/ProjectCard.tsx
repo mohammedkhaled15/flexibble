@@ -1,8 +1,10 @@
 "use client"
 
+import { likeProject } from "@/lib/actions";
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react";
+import { useSession } from 'next-auth/react'
 
 type ProjectProps = {
   key: string,
@@ -11,20 +13,33 @@ type ProjectProps = {
   title: string,
   name: string | null,
   avatarUrl: string | null,
-  userId: string,
-  views: number
+  userId?: string,
+  views: number,
+  likedBy?: string[]
 }
 
-const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views }: ProjectProps) => {
+const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, likedBy }: ProjectProps) => {
+
+  const { data: session } = useSession()
+  console.log(likedBy)
 
   const [randomLikes, setRandomLikes] = useState(0);
-  const [randomViews, setRandomViews] = useState('');
+  // const [randomViews, setRandomViews] = useState('');
   useEffect(() => {
-    setRandomLikes(Math.floor(Math.random() * 10000))
-    setRandomViews(String((Math.floor(Math.random() * 10000) / 1000).toFixed(1) + 'k'))
+    // setRandomLikes(Math.floor(Math.random() * 10000))
+    // setRandomViews(String((Math.floor(Math.random() * 10000) / 1000).toFixed(1) + 'k'))
   }, []);
 
   const [hover, setHover] = useState(false)
+  const [clicked, setClicked] = useState(false)
+
+  const handleLikeClick = async () => {
+    if (session?.user?.email) {
+      setClicked(prev => !prev)
+      await likeProject(id)
+    }
+  }
+
   return (
     <div key={key} className="flexCenter flex-col rounded-2xl drop-shadow-card">
       <Link className="flexCenter group relative w-full h-full" href={`/project/${id}`}>
@@ -57,12 +72,13 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views }: 
         <div className="flexCenter gap-3">
           <div className="flexCenter gap-2 ">
             <Image
-              src={`${hover ? "/heart-purple.svg" : "/heart.svg"}`}
+              src={`${hover || clicked ? "/heart-purple.svg" : "/heart.svg"}`}
               width={13}
               height={12}
               alt="heart"
               onMouseEnter={() => setHover(true)}
               onMouseOut={() => setHover(false)}
+              onClick={handleLikeClick}
               className="cursor-pointer"
             />
             <p className="text-sm">{randomLikes}</p>

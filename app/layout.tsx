@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar"
 import "./global.css"
 import Footer from "@/components/Footer"
+import AppSessionProvider from "@/components/AppSessionProvider"
 
 export const metaData = {
   title: "Flexibble",
@@ -10,13 +11,15 @@ export const metaData = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
-      <body>
-        <Navbar />
-        <main>
-          {children}
-        </main>
-        <Footer />
-      </body>
+      <AppSessionProvider>
+        <body>
+          <Navbar />
+          <main>
+            {children}
+          </main>
+          <Footer />
+        </body>
+      </AppSessionProvider>
     </html>
   )
 }

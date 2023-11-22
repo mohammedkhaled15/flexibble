@@ -9,7 +9,6 @@ const Home = async () => {
     return (
       <section className="flexStart flex-col paddings">
         Categories
-
         <p className="no-result-text text-center">No Projects found, Create them first</p>
       </section>
     )
@@ -25,10 +24,11 @@ const Home = async () => {
               id={project?.id}
               image={project?.image}
               title={project?.title}
-              name={project?.createdBy?.name}
-              avatarUrl={project?.createdBy?.image}
+              name={project?.createdBy?.name || null}
+              avatarUrl={project?.createdBy?.image || null}
               userId={project?.createdBy?.id}
               views={project?.views}
+              likedBy={project?.likedBy}
             />
           ))
         }

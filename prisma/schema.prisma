@@ -50,6 +50,7 @@ model User {
   githubUrl     String?
   linkedinUrl   String?
   projects      Project[]
+  likedProjects Like[]
 }
 
 model Project {
@@ -62,8 +63,16 @@ model Project {
   category    String
   userEmail   String
   views       Int    @default(0)
-  likes       Int    @default(0)
+  likedBy     Like[]
   createdBy   User   @relation(fields: [userEmail], references: [email])
 
   @@unique([title, userEmail])
+}
+
+model Like {
+  id                String  @id @default(cuid()) @map("_id")
+  userId            String
+  projectId         String
+  userWhoLiked      User    @relation(fields: [userId], references: [id])
+  projectWhichLiked Project @relation(fields: [projectId], references: [id])
 }

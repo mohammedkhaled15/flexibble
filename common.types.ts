@@ -18,9 +18,8 @@ export interface ProjectInterface {
   githubUrl: string;
   category: string;
   views: number;
-  likes: number;
-  // userEmail: string;
-  createdBy: {
+  likedBy?:string[]
+  createdBy?: {
     id: string;
     name: string | null;
     email: string;

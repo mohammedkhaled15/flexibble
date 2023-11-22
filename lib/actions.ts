@@ -1,4 +1,5 @@
 "use server";
+
 import { v2 as cloudinary } from "cloudinary";
 import { getCurrentUser } from "@/utils/authOptions";
 import prisma from "@/utils/connectDb";
@@ -50,13 +51,9 @@ export const createProject = async (image: string, formObject: ProjectForm) => {
 export const getAllProjects = async (category: string, endCursor: string) => {
   try {
     const projects = await prisma.project.findMany({
-      include: { createdBy: true },
+      include: { createdBy: true, likedBy: true },
     });
     return projects;
-    // const res = await fetch(`${baseUrl()}/api/project`, {
-    //   method: "GET",
-    // });
-    // return res.json();
   } catch (error) {
     console.log(error);
   }
@@ -135,5 +132,19 @@ export const UpdateProject = async (
     return updatedProject;
   } catch (error) {
     console.log(error);
+  }
+};
+
+//Like a project
+export const likeProject = async (projectId: string) => {
+  const session = await getCurrentUser();
+  if (!session) return;
+
+  try {
+    const res = await prisma.like.create({
+      data: { userId: session.user.id, projectId },
+    });
+  } catch (err) {
+    console.log(err);
   }
 };
