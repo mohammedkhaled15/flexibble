@@ -94,6 +94,7 @@ export const getUserFullProfileByEmail = async (email: string) => {
       where: { email },
       include: { likedProjects: true },
     });
+    revalidatePath("/");
     return userProfile;
   } catch (error) {
     console.log(error);
@@ -158,7 +159,7 @@ export const likeProject = async (projectId: string) => {
     const likedProjectsIds = userProfile?.likedProjects.map(
       (like) => like.projectId
     );
-    if (likedProjectsIds?.includes(projectId)) {
+    if (!likedProjectsIds?.includes(projectId)) {
       const res = await prisma.like.create({
         data: { userId: session.user.id, projectId },
       });
