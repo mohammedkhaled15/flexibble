@@ -23,7 +23,6 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, li
 
   const { data: session } = useSession()
   const [likedProjects, setLikedProjects] = useState<string[]>()
-  // const [optimisticHeart, changeOptimisticHeart] = useOptimistic<string[]>(likedProjects, (state: string[], newProjectId: string) => [...state, newProjectId])
 
   const [hover, setHover] = useState(false)
 
@@ -43,13 +42,12 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, li
   const handleLikeClick = async () => {
     if (session?.user?.email) {
       const res = await likeProject(id)
-      setHover(prev => !prev)
       await getUserByEmail(session.user.email)
-      // if (res === "liked") {
-      //   setHover(true)
-      // } else {
-      //   setHover(false)
-      // }
+      if (res === "liked") {
+        setHover(true)
+      } else {
+        setHover(false)
+      }
     } else {
       return
     }

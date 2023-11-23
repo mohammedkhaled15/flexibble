@@ -35,7 +35,7 @@ const RelatedProjects = async ({ userId, projectId }: Props) => {
               avatarUrl={project?.createdBy?.image}
               userId={project?.createdBy?.id}
               views={project?.views}
-              likedBy={project.likedBy}
+              likedBy={project?.likedBy}
             />
           )))
         }
