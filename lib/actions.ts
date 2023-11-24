@@ -48,7 +48,7 @@ export const createProject = async (image: string, formObject: ProjectForm) => {
 };
 
 //Get All Projects
-export const getAllProjects = async (category: string, endCursor: string) => {
+export const getAllProjects = async (category?: string|null, endCursor?: string) => {
   try {
     const projects = await prisma.project.findMany({
       where:{...(category &&{category})},

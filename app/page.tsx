@@ -3,8 +3,13 @@ import Categories from "@/components/Categories"
 import ProjectCard from "@/components/ProjectCard"
 import { getAllProjects } from "@/lib/actions"
 
-const Home = async ({ searchParams }: { searchParams: { category: string } }) => {
-  console.log(searchParams)
+type Props = {
+  searchParams: {
+    category?: string | null
+  }
+}
+
+const Home = async ({ searchParams }: Props) => {
   const projects = await getAllProjects(searchParams.category, "")
 
   if (projects?.length === 0) {
