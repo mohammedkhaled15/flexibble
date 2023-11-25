@@ -1,18 +1,21 @@
 import { ProjectInterface } from "@/common.types"
 import Categories from "@/components/Categories"
+import LoadMore from "@/components/LoadMore"
 import ProjectCard from "@/components/ProjectCard"
-import { getAllProjects } from "@/lib/actions"
+import { getAllProjects, getAllProjectsLength } from "@/lib/actions"
 
 type Props = {
   searchParams: {
-    category?: string | null
+    category?: string | null,
+    take?: string
   }
 }
 
 const Home = async ({ searchParams }: Props) => {
-  const projects = await getAllProjects(searchParams.category, "")
+  const projects = await getAllProjects(searchParams.category, searchParams.take)
+  const projectsLength = await getAllProjectsLength(searchParams.category)
 
-  if (projects?.length === 0) {
+  if (projectsLength === 0 || projectsLength === undefined) {
     return (
       <section className="flexStart flex-col paddings">
         <Categories />
@@ -40,7 +43,7 @@ const Home = async ({ searchParams }: Props) => {
           ))
         }
       </section>
-      <h1>LoadMore</h1>
+      <LoadMore take={searchParams.take} projectsLength={projectsLength} />
     </section>
   )
 }

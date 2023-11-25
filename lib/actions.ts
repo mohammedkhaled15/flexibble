@@ -48,13 +48,40 @@ export const createProject = async (image: string, formObject: ProjectForm) => {
 };
 
 //Get All Projects
-export const getAllProjects = async (category?: string|null, endCursor?: string) => {
+export const getAllProjects = async (
+  category?: string | null,
+  take?: string
+) => {
   try {
-    const projects = await prisma.project.findMany({
-      where:{...(category &&{category})},
-      include: { createdBy: true, likedBy: true },
-    });
+    let projects
+    if(category === "All"){
+      projects = await prisma.project.findMany({
+        take: Number(take) || 8,
+        include: { createdBy: true, likedBy: true },
+      });
+    }else{
+      projects = await prisma.project.findMany({
+        take: Number(take) || 8,
+        where: { ...(category && { category }) },
+        include: { createdBy: true, likedBy: true },
+      });
+    }
     return projects;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//Get All Projects Length
+export const getAllProjectsLength = async (category?:string|null) => {
+  try {
+    let projectsLength
+    if(category==="All"){
+      projectsLength = await prisma.project.count();
+    }else{
+      projectsLength = await prisma.project.count({where: { ...(category && { category }) }});
+    }
+    return projectsLength;
   } catch (error) {
     console.log(error);
   }
