@@ -17,7 +17,7 @@ const LoadMore = ({ take, projectsLength }: { take?: string, projectsLength: num
 
   return (
     <div className="w-full flexCenter gap-5 mt-10">
-      <Button isSubmitting={(Number(take) || 1) > projectsLength || (Number(take) || 1) == projectsLength} title="Load More" handleClick={handleNavigation} />
+      <Button isSubmitting={(Number(take) || 8) > projectsLength || (Number(take) || 8) == projectsLength} title="Load More" handleClick={handleNavigation} />
     </div>
   )
 }

@@ -18,7 +18,7 @@ const Categories = () => {
         <button
           type={"button"}
           onClick={() => handleTag("All")}
-          className={`${category === "All" ? "bg-light-white-300 font-medium" : "font-normal"} px-4 py-3 rounded-lg capitalize whitespace-nowrap`}
+          className={`${(category === "All" || !category) ? "bg-light-white-300 font-medium" : "font-normal"} px-4 py-3 rounded-lg capitalize whitespace-nowrap`}
         >
           All
         </button>
