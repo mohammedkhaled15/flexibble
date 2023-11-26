@@ -1,8 +1,13 @@
+import UserProfilePage from '@/components/UserProfilePage';
+import { getUserFullProfile } from '@/lib/actions';
 
-const ProfilePage = ({ params }: { params: { id: string } }) => {
-  console.log(params)
+const ProfilePage = async ({ params }: { params: { id: string } }) => {
+  const userProfile = await getUserFullProfile(params.id)
+  if (!userProfile?.projects) {
+    return <p className='no-result-text'>Failed to fetch user info</p>
+  }
   return (
-    <div>ProfilePage</div>
+    <UserProfilePage userProfile={userProfile} />
   )
 }
 

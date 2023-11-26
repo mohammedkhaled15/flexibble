@@ -18,7 +18,7 @@ export interface ProjectInterface {
   githubUrl: string;
   category: string;
   views: number;
-  likedBy?:Like[]
+  likedBy?: Like[];
   createdBy?: {
     id: string;
     name: string | null;
@@ -32,21 +32,15 @@ export interface ProjectInterface {
 
 export interface UserProfile {
   id: string;
-  name: string;
+  name: string | null;
   email: string;
   description: string | null;
-  avatarUrl: string;
+  avatarUrl: string | null;
   githubUrl: string | null;
   linkedinUrl: string | null;
-  projects: {
-    edges: { node: ProjectInterface }[];
-    pageInfo: {
-      hasPreviousPage: boolean;
-      hasNextPage: boolean;
-      startCursor: string;
-      endCursor: string;
-    };
-  };
+  image: string|null;
+  projects:ProjectInterface [];
+  
 }
 
 export interface SessionInterface extends Session {
@@ -67,8 +61,8 @@ export interface ProjectForm {
   category: string;
 }
 
-export interface Like{
-  id:string;
-  userId:string;
-  projectId:string;
+export interface Like {
+  id: string;
+  userId: string;
+  projectId: string;
 }
