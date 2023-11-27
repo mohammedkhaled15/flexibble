@@ -82,7 +82,7 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, li
               height={12}
               alt="heart"
               onMouseOver={() => (session && setHover(true))}
-              onMouseOut={() => (!optimisticHeart && setHover(false))}
+              onMouseOut={() => (setHover(false))}
               onClick={() => handleLikeClick()}
               className={`${session ? "cursor-pointer" : "cursor-default"}`}
             />
