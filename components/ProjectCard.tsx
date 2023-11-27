@@ -17,7 +17,7 @@ type ProjectProps = {
   userId?: string,
   views: number,
   likedBy?: Like[],
-  likedProjectsIds: string[]
+  likedProjectsIds?: string[]
 }
 
 const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, likedBy, likedProjectsIds }: ProjectProps) => {

@@ -12,6 +12,7 @@ const RelatedProjects = async ({ userId, projectId }: Props) => {
 
 
   const userProfile = await getUserFullProfile(userId)
+  const likedProjectsIds = userProfile?.likedProjects.map(like => like.projectId) as string[]
   return (
     <section className="flex flex-col w-full mt-32">
       <div className="flexBetween">
@@ -36,6 +37,7 @@ const RelatedProjects = async ({ userId, projectId }: Props) => {
               userId={project?.createdBy?.id}
               views={project?.views}
               likedBy={project?.likedBy}
+              likedProjectsIds={likedProjectsIds}
             />
           )))
         }
