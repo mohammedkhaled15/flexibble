@@ -53,13 +53,13 @@ export const getAllProjects = async (
   take?: string
 ) => {
   try {
-    let projects
-    if(category === "All"){
+    let projects;
+    if (category === "All") {
       projects = await prisma.project.findMany({
         take: Number(take) || 8,
         include: { createdBy: true, likedBy: true },
       });
-    }else{
+    } else {
       projects = await prisma.project.findMany({
         take: Number(take) || 8,
         where: { ...(category && { category }) },
@@ -73,13 +73,15 @@ export const getAllProjects = async (
 };
 
 //Get All Projects Length
-export const getAllProjectsLength = async (category?:string|null) => {
+export const getAllProjectsLength = async (category?: string | null) => {
   try {
-    let projectsLength
-    if(category==="All"){
+    let projectsLength;
+    if (category === "All") {
       projectsLength = await prisma.project.count();
-    }else{
-      projectsLength = await prisma.project.count({where: { ...(category && { category }) }});
+    } else {
+      projectsLength = await prisma.project.count({
+        where: { ...(category && { category }) },
+      });
     }
     return projectsLength;
   } catch (error) {
@@ -107,22 +109,8 @@ export const getUserFullProfile = async (id: string) => {
   try {
     const userProfile = await prisma.user.findUnique({
       where: { id },
-      include: { projects: { include: { createdBy: true } } },
+      include: { projects: { include: { createdBy: true } }, likedProjects:true },
     });
-    return userProfile;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-//Get user full profile By email
-export const getUserFullProfileByEmail = async (email: string) => {
-  try {
-    const userProfile = await prisma.user.findUnique({
-      where: { email },
-      include: { likedProjects: true },
-    });
-    revalidatePath("/");
     return userProfile;
   } catch (error) {
     console.log(error);
@@ -183,7 +171,7 @@ export const likeProject = async (projectId: string) => {
   if (!session) return;
 
   try {
-    const userProfile = await getUserFullProfileByEmail(session.user.email);
+    const userProfile = await getUserFullProfile(session.user.id)
     const likedProjectsIds = userProfile?.likedProjects.map(
       (like) => like.projectId
     );
@@ -191,16 +179,15 @@ export const likeProject = async (projectId: string) => {
       const res = await prisma.like.create({
         data: { userId: session.user.id, projectId },
       });
-      revalidatePath("/");
-      return "liked";
     } else {
       const res = await prisma.like.deleteMany({
         where: { projectId, userId: userProfile?.id },
       });
-      revalidatePath("/");
-      return;
     }
   } catch (err) {
     console.log(err);
+  }finally{
+    console.log("revalidate")
+    revalidatePath("/")
   }
 };

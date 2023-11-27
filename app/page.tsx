@@ -2,7 +2,8 @@ import { ProjectInterface } from "@/common.types"
 import Categories from "@/components/Categories"
 import LoadMore from "@/components/LoadMore"
 import ProjectCard from "@/components/ProjectCard"
-import { getAllProjects, getAllProjectsLength } from "@/lib/actions"
+import { getAllProjects, getAllProjectsLength, getUserFullProfile } from "@/lib/actions"
+import { getCurrentUser } from "@/utils/authOptions"
 
 type Props = {
   searchParams: {
@@ -12,6 +13,7 @@ type Props = {
 }
 
 const Home = async ({ searchParams }: Props) => {
+  const session = await getCurrentUser();
   const projects = await getAllProjects(searchParams.category, searchParams.take)
   const projectsLength = await getAllProjectsLength(searchParams.category)
 
@@ -23,6 +25,10 @@ const Home = async ({ searchParams }: Props) => {
       </section>
     )
   }
+
+  const userProfile = await getUserFullProfile(session?.user?.id)
+  const likedProjectsIds = userProfile?.likedProjects.map(like => like.projectId) as string[]
+
   return (
     <section className="flex-start flex-col paddings mb-16">
       <Categories />
@@ -39,6 +45,7 @@ const Home = async ({ searchParams }: Props) => {
               userId={project?.createdBy?.id}
               views={project?.views}
               likedBy={project?.likedBy}
+              likedProjectsIds={likedProjectsIds}
             />
           ))
         }

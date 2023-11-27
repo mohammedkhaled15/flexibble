@@ -1,9 +1,9 @@
 "use client"
 
-import { getUserFullProfileByEmail, likeProject } from "@/lib/actions";
+import { likeProject } from "@/lib/actions";
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useOptimistic, useState } from "react";
+import { useOptimistic, useState } from "react";
 import { useSession } from 'next-auth/react'
 import { Like } from "@/common.types";
 
@@ -16,38 +16,30 @@ type ProjectProps = {
   avatarUrl: string | null | undefined,
   userId?: string,
   views: number,
-  likedBy?: Like[]
+  likedBy?: Like[],
+  likedProjectsIds: string[]
 }
 
-const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, likedBy }: ProjectProps) => {
+const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, likedBy, likedProjectsIds }: ProjectProps) => {
 
   const { data: session } = useSession()
-  const [likedProjects, setLikedProjects] = useState<string[]>()
 
+  const [clicked, setClicked] = useState(likedProjectsIds?.includes(id))
   const [hover, setHover] = useState(false)
-
-  const getUserByEmail = async (email: string) => {
-    try {
-      const userProfile = await getUserFullProfileByEmail(email)
-      const likedProjectsIds = userProfile?.likedProjects.map(like => like.projectId)
-      setLikedProjects(likedProjectsIds)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  useEffect(() => {
-    session?.user?.email && getUserByEmail(session?.user?.email)
-  }, [session?.user?.email])
+  const [optimisticLikes, changeOptimisticLikes] = useOptimistic(likedBy?.length, (state: number | undefined, amount: number) => Number(state) + amount)
+  const [optimisticHeart, changeOptimisticHeart] = useOptimistic(likedProjectsIds?.includes(id), (state: boolean | undefined, color) => !state)
 
   const handleLikeClick = async () => {
     if (session?.user?.email) {
-      const res = await likeProject(id)
-      await getUserByEmail(session.user.email)
-      if (res === "liked") {
-        setHover(true)
+      if (!clicked) {
+        changeOptimisticLikes(1)
+        setClicked(true)
       } else {
-        setHover(false)
+        changeOptimisticLikes(-1)
+        setClicked(false)
       }
+      changeOptimisticHeart("")
+      const res = await likeProject(id)
     } else {
       return
     }
@@ -55,7 +47,7 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, li
 
   return (
     <div key={key} className="flexCenter flex-col rounded-2xl drop-shadow-card">
-      <Link className="flexCenter group relative w-full h-full" href={`/project/${id}`}>
+      <Link className="flexCenter group relative w-full h-full " href={`/project/${id}`}>
         <Image
           src={image}
           width={414}
@@ -63,8 +55,8 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, li
           alt="Project Image"
           className="w-full h-full object-cover rounded-2xl "
         />
-        <div className="hidden group-hover:flex profile_card-title">
-          <p className="w-full">{title}</p>
+        <div className="invisible  flex group-hover:visible profile_card-title transition-all ease-in-out  delay-[2500] ">
+          <p className="w-full transition-all ease-in-out  delay-[2500]">{title}</p>
         </div>
       </Link>
 
@@ -85,16 +77,16 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, li
         <div className="flexCenter gap-3">
           <div className="flexCenter gap-2 ">
             <Image
-              src={`${hover || likedProjects?.includes(id) ? "/heart-purple.svg" : "/heart.svg"}`}
+              src={`${hover || optimisticHeart ? "/heart-purple.svg" : "/heart.svg"}`}
               width={13}
               height={12}
               alt="heart"
-              onMouseEnter={() => (session && setHover(true))}
-              onMouseOut={() => (!likedProjects?.includes(id) && setHover(false))}
-              onClick={handleLikeClick}
+              onMouseOver={() => (session && setHover(true))}
+              onMouseOut={() => (!optimisticHeart && setHover(false))}
+              onClick={() => handleLikeClick()}
               className={`${session ? "cursor-pointer" : "cursor-default"}`}
             />
-            <p className="text-sm">{likedBy?.length}</p>
+            <p className="text-sm">{optimisticLikes}</p>
           </div>
           <div className="flexCenter gap-2">
             <Image
