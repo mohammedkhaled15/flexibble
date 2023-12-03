@@ -48,6 +48,7 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, li
   return (
     <div key={key} className="flexCenter flex-col rounded-2xl drop-shadow-card">
       <Link className=" w-[414px] h-[314px]" href={`/project/${id}`}>
+        <>
 {/*         <div className=""> */}
           <Image
             src={image}
@@ -64,6 +65,7 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, li
         <div className="invisible  flex group-hover:visible profile_card-title transition-all ease-in-out  delay-[2500] ">
           <p className="w-full transition-all ease-in-out  delay-[2500]">{title}</p>
         </div>
+        </>
       </Link>
 
       <div className="flexBetween w-full px-2 mt-3 font-semibold text-sm">
