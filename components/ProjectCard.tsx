@@ -48,13 +48,16 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, li
   return (
     <div key={key} className="flexCenter flex-col rounded-2xl drop-shadow-card">
       <Link className="flexCenter group relative w-full h-full" href={`/project/${id}`}>
-        <Image
-          src={image}
-          width={414}
-          height={314}
-          alt="Project Image"
-          className="w-full h-full object-cover rounded-2xl aspect-[14/9]"
-        />
+        <div className="w-[414px] h-[314px]">
+          <Image
+            src={image}
+            // width={414}
+            // height={314}
+            fill={true}
+            alt="Project Image"
+            className="w-full h-full object-cover rounded-2xl aspect-auto"
+          />
+        </div>
         <div className="invisible  flex group-hover:visible profile_card-title transition-all ease-in-out  delay-[2500] ">
           <p className="w-full transition-all ease-in-out  delay-[2500]">{title}</p>
         </div>
