@@ -44,7 +44,6 @@ const ProjectCard = ({ key, id, image, title, name, avatarUrl, userId, views, li
       return
     }
   }
-  // flexCenter group relative w-full h-full
   return (
     <div key={key} className="flexCenter flex-col rounded-2xl drop-shadow-card">
       <Link className="flexCenter group relative w-full h-full" href={`/project/${id}`}>
